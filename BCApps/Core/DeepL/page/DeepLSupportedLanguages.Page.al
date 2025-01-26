@@ -1,5 +1,5 @@
 namespace BusinessCentralex.Core.DeepLAPIConnector;
-page 50151 "DeepL Supported Languages"
+page 50101 "DeepL Supported Languages"
 {
     ApplicationArea = All;
     Caption = 'DeepL Supported Languages';

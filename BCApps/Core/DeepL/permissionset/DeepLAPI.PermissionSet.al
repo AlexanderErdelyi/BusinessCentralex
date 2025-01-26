@@ -1,5 +1,5 @@
 namespace BusinessCentralex.Core.DeepLAPIConnector;
-permissionset 50150 "DeepL API"
+permissionset 50100 "DeepL API"
 {
     Assignable = true;
     Caption = 'DeepL API', MaxLength = 30;

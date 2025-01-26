@@ -1,7 +1,7 @@
 namespace BusinessCentralex.Core.DeepLAPIConnector;
 
 using System.Globalization;
-table 50151 "DeepL Supported Language"
+table 50101 "DeepL Supported Language"
 {
     Caption = 'DeepL Supported Language';
     DataClassification = ToBeClassified;

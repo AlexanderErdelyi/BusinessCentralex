@@ -2,7 +2,7 @@
 namespace BusinessCentralex.Core.DeepLAPIConnector;
 
 using System.Globalization;
-codeunit 50150 "DeepL API Connector"
+codeunit 50100 "DeepL API Connector"
 {
     var
         DeepLAPISetup: Record "DeepL API Setup";

@@ -1,5 +1,5 @@
 namespace BusinessCentralex.Core.DeepLAPIConnector;
-page 50150 "DeepL API Setup"
+page 50100 "DeepL API Setup"
 {
     ApplicationArea = Basic, Suite;
     Caption = 'DeepL API Setup';

@@ -1,5 +1,5 @@
 namespace BusinessCentralex.Core.DeepLAPIConnector;
-table 50150 "DeepL API Setup"
+table 50100 "DeepL API Setup"
 {
     Caption = 'DeepL API Setup';
     DataClassification = ToBeClassified;

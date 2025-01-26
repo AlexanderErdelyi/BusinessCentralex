@@ -1,7 +1,7 @@
 namespace BusinessCentralex.Core.DeepLAPIConnector;
 
 using System.Globalization;
-page 50152 "DeepL Translation Card"
+page 50102 "DeepL Translation Card"
 {
     ApplicationArea = All;
     Caption = 'DeepL Translation Card';
