@@ -1,0 +1,33 @@
+{
+  "id": "73bd6464-5448-4538-9530-27c12a6de936",
+  "name": "Core",
+  "publisher": "BusinessCentralex",
+  "version": "25.3.0.0",
+  "brief": "This is the core module for BusinessCentralex applications.",
+  "description": "This module provides the core functionalities required for BusinessCentralex applications.",
+  "privacyStatement": "",
+  "EULA": "https://github.com/AlexanderErdelyi/BusinessCentralex/blob/main/LICENSE",
+  "help": "https://github.com/AlexanderErdelyi/BusinessCentralex/wiki",
+  "url": "",
+  "logo": "",
+  "dependencies": [],
+  "screenshots": [],
+  "platform": "1.0.0.0",
+  "application": "25.0.0.0",
+  "idRanges": [
+    {
+      "from": 50000,
+      "to": 51000
+    }
+  ],
+  "contextSensitiveHelpUrl": "https://github.com/AlexanderErdelyi/BusinessCentralex/wiki",
+  "resourceExposurePolicy": {
+    "allowDebugging": true,
+    "allowDownloadingSource": true,
+    "includeSourceInSymbolFile": true
+  },
+  "runtime": "14.0",
+  "features": [
+    "NoImplicitWith"
+  ]
+}
