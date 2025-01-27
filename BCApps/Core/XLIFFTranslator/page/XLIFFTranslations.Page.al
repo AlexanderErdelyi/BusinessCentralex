@@ -1,6 +1,5 @@
 namespace BusinessCentralex.Core.XLIFF;
 
-using BusinessCentralex.Core.XLIFF;
 using Core.Core;
 page 50001 "XLIFF Translations"
 {

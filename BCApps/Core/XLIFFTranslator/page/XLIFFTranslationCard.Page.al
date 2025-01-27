@@ -94,6 +94,13 @@ page 50002 "XLIFF Translation Card"
                 }
             }
         }
+        area(FactBoxes)
+        {
+            part(XLIFFTransSuggsListpart; "XLIFF Trans. Suggs. Listpart")
+            {
+                SubPageLink = "Document Entry No." = field("Document Entry No."), "Trans-unit Id" = field("Trans-unit Id");
+            }
+        }
     }
 
     actions
@@ -173,6 +180,16 @@ page 50002 "XLIFF Translation Card"
                             XLIFFTranslationLine.Target := XLIFFTranslationLine."Suggested Translation";
                             XLIFFTranslationLine.Modify(false);
                         until XLIFFTranslationLine.Next() = 0;
+                end;
+            }
+
+            action(GetSuggestedTranslation)
+            {
+                trigger OnAction()
+                var
+                    XLIFFTranslationMappingTool: Codeunit "XLIFF Translation Mapping Tool";
+                begin
+                    XLIFFTranslationMappingTool.GetSuggestedTranslation(Rec);
                 end;
             }
         }
