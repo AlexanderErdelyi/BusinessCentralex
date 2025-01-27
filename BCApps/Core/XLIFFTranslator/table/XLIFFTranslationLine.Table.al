@@ -25,9 +25,17 @@ table 50002 "XLIFF Translation Line"
         {
             Caption = 'Target';
         }
+        field(52; "Suggested Translation"; Text[2048])
+        {
+            Caption = 'Suggested Translation';
+        }
         field(70; "Object Source"; Text[250])
         {
             Caption = 'Object Source';
+        }
+        field(300; "Marked to Filter"; Boolean)
+        {
+            Caption = 'Marked to filter';
         }
     }
     keys
