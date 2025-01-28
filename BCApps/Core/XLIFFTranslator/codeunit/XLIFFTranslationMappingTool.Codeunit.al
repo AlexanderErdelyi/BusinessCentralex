@@ -1,5 +1,6 @@
 namespace BusinessCentralex.Core.XLIFF;
 
+using Microsoft.Utilities;
 using BusinessCentralex.Core.XLIFF;
 using System.Reflection;
 
@@ -10,20 +11,24 @@ codeunit 50004 "XLIFF Translation Mapping Tool"
         XLIFFTranslationHeader: Record "XLIFF Translation Header";
         XLIFFTranslationLine: Record "XLIFF Translation Line";
         XLIFFTranslationMapping: Record "XLIFF Translation Mapping";
+        ProgressDialog: Codeunit "Progress Dialog";
         MaxRecordsToInsert: Integer;
         RecordsInserted: Integer;
     begin
-        MaxRecordsToInsert := 1000;
+        //MaxRecordsToInsert := 1000;
         RecordsInserted := 0;
 
         if XLIFFTranslationHeader.FindSet() then
             repeat
                 XLIFFTranslationLine.SetRange("Document Entry No.", XLIFFTranslationHeader."Entry No.");
                 Message(XLIFFTranslationHeader."File Name" + ' Count: ' + format(XLIFFTranslationLine.Count));
+                ProgressDialog.OpenCopyCountMax('Lines', XLIFFTranslationLine.Count());
                 if XLIFFTranslationLine.FindSet() then
                     repeat
-                        if MaxRecordsToInsert = RecordsInserted then
-                            exit;
+                        //if MaxRecordsToInsert = RecordsInserted then
+                        //    exit;
+
+                        ProgressDialog.UpdateCopyCount();
 
                         XLIFFTranslationMapping.Reset();
                         XLIFFTranslationMapping.SetRange("Source Language Code", XLIFFTranslationHeader."Source Language Code");
@@ -36,9 +41,12 @@ codeunit 50004 "XLIFF Translation Mapping Tool"
                             XLIFFTranslationMapping."Source Language Text" := XLIFFTranslationLine.Source;
                             XLIFFTranslationMapping."Target Language Code" := XLIFFTranslationHeader."Target Language Code";
                             XLIFFTranslationMapping."Target Language Text" := XLIFFTranslationLine.Target;
+                            XLIFFTranslationMapping."Source Language Short as Code" := CopyStr(XLIFFTranslationLine.Source, 1, MaxStrLen(XLIFFTranslationMapping."Source Language Short as Code"));
                             XLIFFTranslationMapping.Insert(true);
                             RecordsInserted += 1;
                         end;
+                    //if RecordsInserted mod 100 = 0 then
+                    //    Commit();
                     until XLIFFTranslationLine.Next() = 0;
             until XLIFFTranslationHeader.Next() = 0;
     end;
@@ -81,16 +89,22 @@ codeunit 50004 "XLIFF Translation Mapping Tool"
     procedure SuggestTranslation(NewText: Text; var XLIFFTranslationMappingList: List of [Integer]; var SimilarityList: List of [Decimal])
     var
         XLIFFTranslationMapping: Record "XLIFF Translation Mapping";
+        ProgressDialog: Codeunit "Progress Dialog";
         //Suggestions: List of [Text, Text, Decimal];
         Suggestions: List of [Text];
         Similarity: Decimal;
         Treshold: Integer;
     begin
         // Loop through the translation mappings
+        //XLIFFTranslationMapping.SetRange("Source Language Short as Code", CopyStr(NewText.ToUpper(), 1, MaxStrLen(XLIFFTranslationMapping."Source Language Short as Code")));
+        ProgressDialog.OpenCopyCountMax('Mapping', XLIFFTranslationMapping.Count());
         if XLIFFTranslationMapping.FindSet() then
             repeat
+                ProgressDialog.UpdateCopyCount();
+                NewText := CopyStr(NewText.ToUpper(), 1, MaxStrLen(XLIFFTranslationMapping."Source Language Short as Code"));
                 // Calculate similarity percentage
-                Similarity := CalculateSimilarity(NewText, XLIFFTranslationMapping."Source Language Text");
+                //Similarity := CalculateSimilarity(NewText, XLIFFTranslationMapping."Source Language Text");
+                Similarity := CalculateSimilarity(NewText, XLIFFTranslationMapping."Source Language Short as Code");
 
                 // Add to suggestions if similarity > threshold (e.g., 50%)
                 if Similarity > 50 then begin
@@ -117,6 +131,8 @@ codeunit 50004 "XLIFF Translation Mapping Tool"
         Distance := TypeHelper.TextDistance(Text1, Text2);
 
         MaxLen := Len1 >= Len2 ? Len1 : Len2;
+        if MaxLen = 0 then
+            MaxLen := 1;
         exit((1 - Distance / MaxLen) * 100);
     end;
 }

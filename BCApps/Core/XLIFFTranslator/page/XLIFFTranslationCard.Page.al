@@ -1,5 +1,6 @@
 namespace Core.Core;
 
+using Microsoft.Utilities;
 using BusinessCentralex.Core.DeepLAPIConnector;
 using System.Utilities;
 using System.Environment.Configuration;
@@ -187,9 +188,17 @@ page 50002 "XLIFF Translation Card"
             {
                 trigger OnAction()
                 var
+                    XLIFFTranslationLine: Record "XLIFF Translation Line";
                     XLIFFTranslationMappingTool: Codeunit "XLIFF Translation Mapping Tool";
+                    ProgressDialog: Codeunit "Progress Dialog";
                 begin
-                    XLIFFTranslationMappingTool.GetSuggestedTranslation(Rec);
+                    CurrPage.SetSelectionFilter(XLIFFTranslationLine);
+                    ProgressDialog.OpenCopyCountMax('Line', XLIFFTranslationLine.Count());
+                    if XLIFFTranslationLine.FindSet() then
+                        repeat
+                            ProgressDialog.UpdateCopyCount();
+                            XLIFFTranslationMappingTool.GetSuggestedTranslation(XLIFFTranslationLine);
+                        until XLIFFTranslationLine.Next() = 0;
                 end;
             }
         }

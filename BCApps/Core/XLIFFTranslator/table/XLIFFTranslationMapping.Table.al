@@ -23,6 +23,10 @@ table 50003 "XLIFF Translation Mapping"
         {
             Caption = 'Source';
         }
+        field(22; "Source Language Short as Code"; Code[30])
+        {
+            Caption = 'Source Language Short Text as Code';
+        }
         field(30; "Target Language Code"; Code[10])
         {
             Caption = 'Target Language Code';
@@ -38,7 +42,7 @@ table 50003 "XLIFF Translation Mapping"
         {
             Clustered = true;
         }
-        key(Key1; "Source Language Code", "Source Language Text", "Target Language Code", "Target Language Text")
+        key(Key1; "Source Language Short as Code")
         {
 
         }
