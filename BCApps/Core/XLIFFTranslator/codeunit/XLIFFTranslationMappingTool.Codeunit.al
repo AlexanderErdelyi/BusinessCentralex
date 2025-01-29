@@ -32,16 +32,16 @@ codeunit 50004 "XLIFF Translation Mapping Tool"
 
                         XLIFFTranslationMapping.Reset();
                         XLIFFTranslationMapping.SetRange("Source Language Code", XLIFFTranslationHeader."Source Language Code");
-                        XLIFFTranslationMapping.SetRange("Source Language Text", XLIFFTranslationLine.Source);
+                        XLIFFTranslationMapping.SetRange("Source Language Text", XLIFFTranslationLine."Source Translation");
                         XLIFFTranslationMapping.SetRange("Target Language Code", XLIFFTranslationHeader."Target Language Code");
-                        XLIFFTranslationMapping.SetRange("Target Language Text", XLIFFTranslationLine.Target);
+                        XLIFFTranslationMapping.SetRange("Target Language Text", XLIFFTranslationLine."Target Translation");
                         if XLIFFTranslationMapping.IsEmpty() then begin
                             XLIFFTranslationMapping.Init();
                             XLIFFTranslationMapping."Source Language Code" := XLIFFTranslationHeader."Source Language Code";
-                            XLIFFTranslationMapping."Source Language Text" := XLIFFTranslationLine.Source;
+                            XLIFFTranslationMapping."Source Language Text" := XLIFFTranslationLine."Source Translation";
                             XLIFFTranslationMapping."Target Language Code" := XLIFFTranslationHeader."Target Language Code";
-                            XLIFFTranslationMapping."Target Language Text" := XLIFFTranslationLine.Target;
-                            XLIFFTranslationMapping."Source Language Short as Code" := CopyStr(XLIFFTranslationLine.Source, 1, MaxStrLen(XLIFFTranslationMapping."Source Language Short as Code"));
+                            XLIFFTranslationMapping."Target Language Text" := XLIFFTranslationLine."Target Translation";
+                            XLIFFTranslationMapping."Source Language Short as Code" := CopyStr(XLIFFTranslationLine."Source Translation", 1, MaxStrLen(XLIFFTranslationMapping."Source Language Short as Code"));
                             XLIFFTranslationMapping.Insert(true);
                             RecordsInserted += 1;
                         end;
@@ -69,7 +69,7 @@ codeunit 50004 "XLIFF Translation Mapping Tool"
         LineNo := 0;
         i := 0;
 
-        SuggestTranslation(Rec.Source, SuggestedTranslations, SimilarityList);
+        SuggestTranslation(Rec."Source Translation", SuggestedTranslations, SimilarityList);
 
         foreach SuggestedTranslation in SuggestedTranslations do begin
             i += 1;
@@ -97,10 +97,10 @@ codeunit 50004 "XLIFF Translation Mapping Tool"
     begin
         // Loop through the translation mappings
         //XLIFFTranslationMapping.SetRange("Source Language Short as Code", CopyStr(NewText.ToUpper(), 1, MaxStrLen(XLIFFTranslationMapping."Source Language Short as Code")));
-        ProgressDialog.OpenCopyCountMax('Mapping', XLIFFTranslationMapping.Count());
+        //ProgressDialog.OpenCopyCountMax('Mapping', XLIFFTranslationMapping.Count());
         if XLIFFTranslationMapping.FindSet() then
             repeat
-                ProgressDialog.UpdateCopyCount();
+                //ProgressDialog.UpdateCopyCount();
                 NewText := CopyStr(NewText.ToUpper(), 1, MaxStrLen(XLIFFTranslationMapping."Source Language Short as Code"));
                 // Calculate similarity percentage
                 //Similarity := CalculateSimilarity(NewText, XLIFFTranslationMapping."Source Language Text");

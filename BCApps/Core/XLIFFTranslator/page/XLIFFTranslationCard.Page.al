@@ -74,12 +74,12 @@ page 50002 "XLIFF Translation Card"
                     Caption = 'Trans-unit Id';
                     Visible = false;
                 }
-                field(Source; Rec.Source)
+                field(Source; Rec."Source Translation")
                 {
                     ToolTip = 'Specifies the value of the Source field.', Comment = '%';
                     Caption = 'Source';
                 }
-                field(Target; Rec.Target)
+                field(Target; Rec."Target Translation")
                 {
                     ToolTip = 'Specifies the value of the Target field.', Comment = '%';
                     Caption = 'Target';
@@ -161,7 +161,7 @@ page 50002 "XLIFF Translation Card"
                     CurrPage.SetSelectionFilter(XLIFFTranslationLine);
                     if XLIFFTranslationLine.FindSet(true) then
                         repeat
-                            XLIFFTranslationLine."Suggested Translation" := DeepLAPIConnector.Translate(SourceLanguageCode, TargetLanguageCode, XLIFFTranslationLine.Source);
+                            XLIFFTranslationLine."Suggested Translation" := DeepLAPIConnector.Translate(SourceLanguageCode, TargetLanguageCode, XLIFFTranslationLine."Source Translation");
                             XLIFFTranslationLine.Modify(false);
                         until XLIFFTranslationLine.Next() = 0;
                 end;
@@ -178,7 +178,7 @@ page 50002 "XLIFF Translation Card"
                     CurrPage.SetSelectionFilter(XLIFFTranslationLine);
                     if XLIFFTranslationLine.FindSet(true) then
                         repeat
-                            XLIFFTranslationLine.Target := XLIFFTranslationLine."Suggested Translation";
+                            XLIFFTranslationLine."Target Translation" := XLIFFTranslationLine."Suggested Translation";
                             XLIFFTranslationLine.Modify(false);
                         until XLIFFTranslationLine.Next() = 0;
                 end;

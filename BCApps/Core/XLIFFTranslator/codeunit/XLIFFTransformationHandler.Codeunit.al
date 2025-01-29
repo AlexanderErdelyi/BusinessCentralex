@@ -93,10 +93,10 @@ codeunit 50002 "XLIFF Transformation Handler"
                         end;
 
                     transUnitNode.SelectSingleNode('ns:source', nsmgr, sourceNode);
-                    XLIFFTranslationLine.Source := sourceNode.AsXmlElement().InnerText();
+                    XLIFFTranslationLine."Source Translation" := sourceNode.AsXmlElement().InnerText();
 
                     transUnitNode.SelectSingleNode('ns:target', nsmgr, targetNode);
-                    XLIFFTranslationLine.Target := targetNode.AsXmlElement().InnerText();
+                    XLIFFTranslationLine."Target Translation" := targetNode.AsXmlElement().InnerText();
 
                     transUnitNode.SelectNodes('ns:note', nsmgr, noteNodeList);
                     foreach noteNode in NoteNodeList do begin
@@ -206,11 +206,11 @@ codeunit 50002 "XLIFF Transformation Handler"
                         end;
 
                     transUnitNode.SelectSingleNode('ns:source', nsmgr, sourceNode);
-                    XLIFFTranslationLine.Source := sourceNode.AsXmlElement().InnerText();
+                    XLIFFTranslationLine."Source Translation" := sourceNode.AsXmlElement().InnerText();
 
                     if XLIFFTranslationLine.Get(XLIFFTranslationHeader."Entry No.", TransUnitId) then begin
                         transUnitNode.SelectSingleNode('ns:target', nsmgr, targetNode);
-                        targetElement := XmlElement.Create('target', nsuri, XLIFFTranslationLine.Target);
+                        targetElement := XmlElement.Create('target', nsuri, XLIFFTranslationLine."Target Translation");
                         targetNode.ReplaceWith(targetElement);
                     end;
 

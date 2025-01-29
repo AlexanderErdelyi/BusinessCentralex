@@ -17,13 +17,13 @@ table 50002 "XLIFF Translation Line"
         {
             Caption = 'Trans-unit Id';
         }
-        field(50; Source; Text[2048])
+        field(50; "Source Translation"; Text[2048])
         {
-            Caption = 'Source';
+            Caption = 'Source Translation';
         }
-        field(51; Target; Text[2048])
+        field(51; "Target Translation"; Text[2048])
         {
-            Caption = 'Target';
+            Caption = 'Target Translation';
         }
         field(52; "Suggested Translation"; Text[2048])
         {
