@@ -4,5 +4,15 @@
 			"path": "BCApps/Core"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"al.enableCodeAnalysis": true,
+		"al.backgroundCodeAnalysis": true,
+		"al.codeAnalyzers": [
+			//"${CodeCop}",
+			//"${PerTenantExtensionCop}",
+			//"${UICop}"
+		],		
+		"al.enableCodeActions": true,
+		"al.ruleSetPath": ".vscode\\Core.ruleset.json"
+	}
 }

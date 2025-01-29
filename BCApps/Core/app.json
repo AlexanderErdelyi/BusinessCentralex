@@ -29,5 +29,6 @@
   "runtime": "14.0",
   "features": [
     "NoImplicitWith"
-  ]
+  ],
+  "suppressWarnings": []
 }
