@@ -348,7 +348,7 @@ page 50002 "XLIFF Translation Card"
         Regex: Codeunit Regex;
     begin
         TempRegexOptions.IgnoreCase := true;
-        Regex.Regex('^(table|tableextension|codeunit|report|reportextension|page|pageextension|xmlport) \d+ "(.*)"', TempRegexOptions);
+        Regex.Regex('^(table|tableextension|codeunit|report|reportextension|page|pageextension|xmlport|enum|enumextension) \d+ "(.*)"', TempRegexOptions);
         Regex.Match(TextLine, TempMatches);
         if TempMatches.FindSet() then
             repeat
@@ -364,7 +364,7 @@ page 50002 "XLIFF Translation Card"
     begin
         TempRegexOptions.IgnoreCase := true;
         //Regex.Regex('^(table|tableextension|codeunit|report|reportextension|page|pageextension|xmlport) \d+ "(.*)"', TempRegexOptions);        
-        Regex.Regex('^(table|tableextension|codeunit|report|reportextension|page|pageextension|xmlport)\b', TempRegexOptions);
+        Regex.Regex('^(table|tableextension|codeunit|report|reportextension|page|pageextension|xmlportenum|enumextension)\b', TempRegexOptions);
         Regex.Match(TextLine, TempMatches);
         if TempMatches.FindSet() then
             repeat
