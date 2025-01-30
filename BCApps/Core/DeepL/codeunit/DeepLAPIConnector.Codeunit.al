@@ -110,8 +110,18 @@ codeunit 50100 "DeepL API Connector"
         JArray: JsonArray;
         JTokenTranslations, JTokenTranslation : JsonToken;
     begin
+        TranslatedText := Translate(SourceLanguageCode, TargetLanguageCode, TextToTranslate, false);
+    end;
+
+    procedure Translate(SourceLanguageCode: Code[10]; TargetLanguageCode: Code[10]; TextToTranslate: Text; isRetry: Boolean) TranslatedText: Text
+    var
+        JObject, JObjectTranslation : JsonObject;
+        JArray: JsonArray;
+        JTokenTranslations, JTokenTranslation : JsonToken;
+    begin
         GetDeepLSourceAndTargetLanguageCode(SourceLanguageCode, TargetLanguageCode);
-        FillTextToTranslate(SourceLanguageCode, TargetLanguageCode, TextToTranslate);
+        if not isRetry then
+            FillTextToTranslate(SourceLanguageCode, TargetLanguageCode, TextToTranslate);
 
         if SendRequest('POST', '/translate', TextToTranslate, ResponseMessage, Response) then begin
             ResponseMessage.Content.ReadAs(Response);
@@ -127,7 +137,7 @@ codeunit 50100 "DeepL API Connector"
         end
         else begin
             Sleep(2000);
-            TranslatedText := Translate(SourceLanguageCode, TargetLanguageCode, TextToTranslate);
+            TranslatedText := Translate(SourceLanguageCode, TargetLanguageCode, TextToTranslate, true);
         end;
     end;
 
