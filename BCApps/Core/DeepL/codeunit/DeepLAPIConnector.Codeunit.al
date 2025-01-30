@@ -44,7 +44,8 @@ codeunit 50100 "DeepL API Connector"
             if p_ResponseMessage.IsSuccessStatusCode() then
                 exit(true)
             else
-                Message('%1 \ %2', format(p_ResponseMessage.HttpStatusCode), p_ResponseMessage.ReasonPhrase);
+                //Message('%1 \ %2', format(p_ResponseMessage.HttpStatusCode), p_ResponseMessage.ReasonPhrase);
+                exit(false);
         end;
     end;
 
@@ -126,7 +127,7 @@ codeunit 50100 "DeepL API Connector"
         end
         else begin
             Sleep(2000);
-            Translate(SourceLanguageCode, TargetLanguageCode, TextToTranslate);
+            TranslatedText := Translate(SourceLanguageCode, TargetLanguageCode, TextToTranslate);
         end;
     end;
 

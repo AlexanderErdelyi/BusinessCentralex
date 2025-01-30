@@ -158,10 +158,13 @@ page 50002 "XLIFF Translation Card"
                 var
                     XLIFFTranslationLine: Record "XLIFF Translation Line";
                     DeepLAPIConnector: Codeunit "DeepL API Connector";
+                    ProgressDialog: Codeunit "Progress Dialog";
                 begin
                     CurrPage.SetSelectionFilter(XLIFFTranslationLine);
+                    ProgressDialog.OpenCopyCountMax('Line', XLIFFTranslationLine.Count);
                     if XLIFFTranslationLine.FindSet(true) then
                         repeat
+                            ProgressDialog.UpdateCopyCount();
                             XLIFFTranslationLine."Suggested Translation" := DeepLAPIConnector.Translate(SourceLanguageCode, TargetLanguageCode, XLIFFTranslationLine."Source Translation");
                             XLIFFTranslationLine.Modify(false);
                         until XLIFFTranslationLine.Next() = 0;
