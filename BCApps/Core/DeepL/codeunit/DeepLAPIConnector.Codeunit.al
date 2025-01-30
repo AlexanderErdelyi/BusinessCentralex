@@ -123,6 +123,10 @@ codeunit 50100 "DeepL API Connector"
                 JObjectTranslation := JTokenTranslation.AsObject();
                 TranslatedText := GetJsonFieldValue(JObjectTranslation, 'text', TranslatedText);
             end;
+        end
+        else begin
+            Sleep(2000);
+            Translate(SourceLanguageCode, TargetLanguageCode, TextToTranslate);
         end;
     end;
 

@@ -126,6 +126,7 @@ page 50002 "XLIFF Translation Card"
                     XLIFFTranslationLine.SetRange("Marked to Filter", true);
                     if not XLIFFTranslationLine.IsEmpty() then
                         XLIFFTranslationLine.ModifyAll("Marked to Filter", false);
+                    XLIFFTranslationLine.Reset();
 
                     foreach CurrentFile in Files do begin
                         CurrentFile.CreateInStream(TempInStream, TEXTENCODING::UTF8);
@@ -200,6 +201,58 @@ page 50002 "XLIFF Translation Card"
                             XLIFFTranslationMappingTool.GetSuggestedTranslation(XLIFFTranslationLine);
                         until XLIFFTranslationLine.Next() = 0;
                 end;
+            }
+            action(RemoveNABNotTranslated)
+            {
+                trigger OnAction()
+                var
+                    XLIFFTranslationLine: Record "XLIFF Translation Line";
+                    XLIFFNABHandling: Codeunit "XLIFF NAB Handling";
+                begin
+                    CurrPage.SetSelectionFilter(XLIFFTranslationLine);
+                    if XLIFFTranslationLine.FindSet() then
+                        repeat
+                            XLIFFNABHandling.RemoveNABReview(XLIFFTranslationLine);
+                        until XLIFFTranslationLine.Next() = 0;
+                end;
+            }
+            action(RemoveNABSuggestion)
+            {
+                trigger OnAction()
+                var
+                    XLIFFTranslationLine: Record "XLIFF Translation Line";
+                    XLIFFNABHandling: Codeunit "XLIFF NAB Handling";
+                begin
+                    CurrPage.SetSelectionFilter(XLIFFTranslationLine);
+                    if XLIFFTranslationLine.FindSet() then
+                        repeat
+                            XLIFFNABHandling.RemoveNABSuggestion(XLIFFTranslationLine);
+                        until XLIFFTranslationLine.Next() = 0;
+                end;
+            }
+        }
+        area(Promoted)
+        {
+            group(FilterHelper)
+            {
+                Caption = 'Filter Helper';
+                actionref(UploadFolderToCreateFilterPromoted; UploadFolderToCreateFilter) { }
+            }
+            group(DeepL)
+            {
+                Caption = 'DeepL';
+                actionref(SuggestTranslationPromoted; SuggestTranslations) { }
+            }
+            group(Suggestion)
+            {
+                Caption = 'Suggestion';
+                actionref(SuggestionPromoted; ApplySuggestedTranslations) { }
+            }
+            group(NAB)
+            {
+                Caption = 'NAB';
+                actionref(RemoveNABNotTranslatedPromoted; RemoveNABNotTranslated) { }
+                actionref(RemoveNABSuggestionPromoted; RemoveNABSuggestion) { }
             }
         }
     }
