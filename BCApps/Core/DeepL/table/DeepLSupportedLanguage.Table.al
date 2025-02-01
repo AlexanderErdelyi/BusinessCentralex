@@ -24,6 +24,7 @@ table 50101 "DeepL Supported Language"
     }
     keys
     {
+        //ToDo Change PK to BC Language Code, since DeepL doesnt differenciate for example between different German Languages like: DEU, DEA etc.
         key(PK; "DeepL Language Code")
         {
             Clustered = true;
