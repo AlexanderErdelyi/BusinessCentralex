@@ -7,28 +7,34 @@ codeunit 50008 "Create Test Mail Address"
     var
         TestEmailAddress: Text;
 
-    procedure SetTestEMailAddress(NewTestEmailAddress: Text)
+    procedure SetTestEMailAddress(EmailAddress: Text)
     begin
-        TestEmailAddress := NewTestEmailAddress;
+        this.TestEmailAddress := EmailAddress;
     end;
 
-    procedure ModifyEmailForTestSystem(OriginalEmailAddresses: Text) RetVal: Text
+    procedure ConvertEmailAddressToTest(EmailAddress: Text; OriginalEmailAddresses: Text) RetVal: Text
+    begin
+        this.TestEmailAddress := EmailAddress;
+
+        RetVal := this.ConvertEmailAddressToTest(OriginalEmailAddresses);
+    end;
+
+    procedure ConvertEmailAddressToTest(OriginalEmailAddresses: Text) RetVal: Text
     var
         OriginalEmailAddressesList: List of [Text];
-        EmailAddress: Text;
+        EmailAddress, EmailAddress2 : Text;
         OriginalTestEmailAddressesList: List of [Text];
         TestEMailAddressesList: List of [Text];
         TestEMailAddressLocalPart: Text;
         TestEMailAddressDomainPart: Text;
-        TestEmailAddress: Text;
     begin
         OriginalTestEmailAddressesList := TestEmailAddress.Split(';');
         OriginalEmailAddressesList := OriginalEmailAddresses.Split(';');
 
         foreach EmailAddress in OriginalEmailAddressesList do
-            foreach TestEmailAddress in OriginalTestEmailAddressesList do begin
-                TestEMailAddressLocalPart := GetMailLocalPart(TestEmailAddress);
-                TestEMailAddressDomainPart := GetMailDomain(TestEmailAddress);
+            foreach EmailAddress2 in OriginalTestEmailAddressesList do begin
+                TestEMailAddressLocalPart := GetMailLocalPart(EmailAddress2);
+                TestEMailAddressDomainPart := GetMailDomain(EmailAddress2);
 
                 TestEmailAddressesList.Add(TestEMailAddressLocalPart + '+' + GetMailLocalPart(EmailAddress) + TestEMailAddressDomainPart);
             end;
