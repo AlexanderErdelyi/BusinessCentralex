@@ -16,7 +16,7 @@ table 50006 "Page Scripting"
         }
         field(20; URL; Text[2024])
         {
-            Caption = 'URL';
+            Caption = 'URL'; //
             ExtendedDatatype = URL;
         }
     }
