@@ -1,6 +1,8 @@
 namespace BusinessCentralex.Core.Tools;
 
-codeunit 50007 "Progress Dialog"
+using System.Reflection;
+
+codeunit 50007 "Progress Dialog Advanced"
 {
     trigger OnRun()
     begin
@@ -8,8 +10,9 @@ codeunit 50007 "Progress Dialog"
 
     var
         ProgressWindow: Dialog;
-        WindowUpdateDateTime: DateTime;
-        CurrentRecCount: Integer;
+        WindowStartDateTime, WindowUpdateDateTime : DateTime;
+        CurrentRecCount, MaxRecCount : Integer;
+        ElapsedTime: Duration;
         ProgressCopyCountMaxMsg: Label 'Copying #1###### #2###### out of #3#######', Comment = '#1######=Type of object copied; #2######=amount copied;#3#######=total amount to copy';
         ProgressCustomCountMaxMsg: Label '#1################## #2################## #3################## out of #4##################', Comment = '#1######=Type of object copied; #2######=amount copied;#3#######=total amount to copy';
         ProgressCopyCountMsg: Label 'Copying #1###### #2######', Comment = '#1######=Type of object copied; #2######=amount copied';
@@ -42,9 +45,43 @@ codeunit 50007 "Progress Dialog"
     #region Custom Dialog
     procedure OpenCustomCountMax(CustomText: Text; Type: Text; MaxCount: Integer)
     begin
+        WindowStartDateTime := CurrentDateTime;
+        MaxRecCount := MaxCount;
         CurrentRecCount := 0;
         ProgressWindow.Open(ProgressCustomCountMaxMsg, CustomText, Type, CurrentRecCount, MaxCount);
         WindowUpdateDateTime := CurrentDateTime;
     end;
+
+    procedure UpdateCustomCopyCount()
+    begin
+        ElapsedTime := CurrentDateTime - WindowStartDateTime;
+        CurrentRecCount += 1;
+        if CurrentDateTime - WindowUpdateDateTime >= 300 then begin
+            WindowUpdateDateTime := CurrentDateTime;
+            ProgressWindow.Update(2, CurrentRecCount);
+            ProgressWindow.Update(3, ElapsedTime);
+            ProgressWindow.Update(4, EstimateRemainingTime(ElapsedTime, (CurrentRecCount / MaxRecCount) * 100));
+        end;
+    end;
     #endregion
+
+    procedure EstimateRemainingTime(ElapsedTime: Duration; ProgressPercentage: Decimal): Duration
+    var
+        TotalEstimatedTime: Duration;
+        AvgElapsedTime: Duration;
+    begin
+        if (ProgressPercentage <= 0) or (ProgressPercentage > 100) then
+            Error('Progress percentage must be between 0 and 100.');
+
+        ProgressPercentage := Round(ProgressPercentage, 2);
+
+        // Calculate the total estimated time based on elapsed time and progress percentage
+        //AvgElapsedTime := Round(ElapsedTime / Round((100 / ProgressPercentage), 2), 2);
+        //TotalEstimatedTime := (100 - ProgressPercentage) * AvgElapsedTime;
+        TotalEstimatedTime := ElapsedTime * Round((100 / ProgressPercentage), 4);
+
+        // Calculate the remaining time
+        exit(TotalEstimatedTime - ElapsedTime);
+    end;
+
 }
