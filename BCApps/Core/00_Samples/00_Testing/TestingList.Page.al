@@ -24,6 +24,14 @@ page 50007 "Testing List"
                     ToolTip = 'Specifies the value of the Description field.', Comment = '%';
                 }
             }
+            group(Test)
+            {
+                usercontrol(ProgressBarControl; "ProgressBarControlAddin")
+                {
+                    ApplicationArea = All;
+                }
+            }
+
         }
     }
 
@@ -44,6 +52,19 @@ page 50007 "Testing List"
                     for i := 1 to 10 do begin
                         Sleep(1000);
                         ProgressDialogAdvanced.UpdateCustomCopyCount();
+                    end;
+                end;
+            }
+            action(ShowProgress)
+            {
+                ApplicationArea = All;
+                trigger OnAction()
+                var
+                    i: Integer;
+                begin
+                    for i := 1 to 100 do begin
+                        CurrPage.ProgressBarControl.UpdateProgress(i);
+                        Sleep(100); // Simulate task
                     end;
                 end;
             }
