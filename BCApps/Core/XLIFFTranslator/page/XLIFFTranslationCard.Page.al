@@ -1,5 +1,6 @@
 namespace Core.Core;
 
+using BusinessCentralex.Core.Tools;
 using Microsoft.Utilities;
 using BusinessCentralex.Core.DeepLAPIConnector;
 using System.Utilities;
@@ -194,13 +195,13 @@ page 50002 "XLIFF Translation Card"
                 var
                     XLIFFTranslationLine: Record "XLIFF Translation Line";
                     XLIFFTranslationMappingTool: Codeunit "XLIFF Translation Mapping Tool";
-                    ProgressDialog: Codeunit "Progress Dialog";
+                    ProgressDialogAdvanced: Codeunit "Progress Dialog Advanced";
                 begin
                     CurrPage.SetSelectionFilter(XLIFFTranslationLine);
-                    ProgressDialog.OpenCopyCountMax('Line', XLIFFTranslationLine.Count());
+                    ProgressDialogAdvanced.OpenCustomCountMax('Get Suggestion...', 'Line', XLIFFTranslationLine.Count());
                     if XLIFFTranslationLine.FindSet() then
                         repeat
-                            ProgressDialog.UpdateCopyCount();
+                            ProgressDialogAdvanced.UpdateCustomCopyCount();
                             XLIFFTranslationMappingTool.GetSuggestedTranslation(XLIFFTranslationLine);
                         until XLIFFTranslationLine.Next() = 0;
                 end;
