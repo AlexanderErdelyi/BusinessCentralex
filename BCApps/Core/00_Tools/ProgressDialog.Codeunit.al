@@ -73,12 +73,8 @@ codeunit 50007 "Progress Dialog Advanced"
         if (ProgressPercentage <= 0) or (ProgressPercentage > 100) then
             Error('Progress percentage must be between 0 and 100.');
 
-        ProgressPercentage := Round(ProgressPercentage, 2);
-
         // Calculate the total estimated time based on elapsed time and progress percentage
-        //AvgElapsedTime := Round(ElapsedTime / Round((100 / ProgressPercentage), 2), 2);
-        //TotalEstimatedTime := (100 - ProgressPercentage) * AvgElapsedTime;
-        TotalEstimatedTime := ElapsedTime * Round((100 / ProgressPercentage), 4);
+        TotalEstimatedTime := Round(ElapsedTime * (100 / ProgressPercentage), 1000);
 
         // Calculate the remaining time
         exit(TotalEstimatedTime - ElapsedTime);
