@@ -68,7 +68,7 @@ codeunit 50008 "Create Test Mail Address"
         Regex.Regex('^([^@]+)', TempRegexOptions);
         Regex.Match(EMailAddress, TempMatches);
         if TempMatches.FindFirst() then
-            exit(TempMatches.ReadValue());
+            exit(TempMatches.ReadValue().Trim());
     end;
 
 }

@@ -42,6 +42,15 @@ page 50000 "FMD Regex List"
                     GetMatch();
                 end;
             }
+            action(CreateTestMailAction)
+            {
+                trigger OnAction()
+                var
+                    CreateTestMailAddress: Codeunit "Create Test Mail Address";
+                begin
+                    Message(CreateTestMailAddress.ConvertEmailAddressToTest('alex@fellowmind.de', 'test@test.de; abc@abc.de'));
+                end;
+            }
         }
     }
 
