@@ -1,5 +1,6 @@
 namespace BusinessCentralex.Core.Sample;
 
+using BusinessCentralex.Core.Sample;
 using BusinessCentralex.Core.Tools;
 page 50007 "Testing List"
 {
@@ -68,9 +69,47 @@ page 50007 "Testing List"
                     end;
                 end;
             }
+            action(ChangeFieldValueAction)
+            {
+                trigger OnAction()
+                begin
+                    ChangeFieldValue();
+                end;
+            }
         }
     }
 
     var
         ProgressDialogAdvanced: Codeunit "Progress Dialog Advanced";
+
+    local procedure ChangeFieldValue()
+    var
+        TestingHeader: Record "Testing Header";
+        InputPage: Page "Input Page";
+        ChangeDocuwareDocumentNoLbl: Label 'Change Docuware Document No.';
+        ChangeQst: Label 'Are you sure you want to change the %1 to %2 for the selected %3?', Comment = '%1=DW Doc. No Field Caption, %2=DW Doc. No Value, %3=Page Caption';
+        DWDocNo: Code[20];
+    begin
+        InputPage.Caption(ChangeDocuwareDocumentNoLbl);
+        InputPage.SetGetFieldCaption(Rec.FieldCaption(Description));
+        InputPage.LookupMode(true);
+        if InputPage.RunModal() = Action::LookupOK then
+            DWDocNo := InputPage.GetValueAsCode()
+        else
+            exit;
+
+        if not Confirm(ChangeQst, true,
+            Rec.FieldCaption(Description),
+            DWDocNo,
+            CurrPage.Caption())
+        then
+            exit;
+
+        CurrPage.SetSelectionFilter(TestingHeader);
+        if TestingHeader.FindSet(true) then
+            repeat
+                TestingHeader.Validate(Description, DWDocNo);
+                TestingHeader.Modify(true);
+            until TestingHeader.Next() = 0;
+    end;
 }
