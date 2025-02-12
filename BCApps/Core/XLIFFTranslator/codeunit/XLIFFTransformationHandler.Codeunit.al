@@ -117,6 +117,132 @@ codeunit 50002 "XLIFF Transformation Handler"
         end;
     end;
 
+    procedure TransformReplaceXLIFF(XLIFFTranslationHeader: Record "XLIFF Translation Header")
+    var
+        XLIFFTranslationLine: Record "XLIFF Translation Line";
+        TenantMedia: Record "Tenant Media";
+        InStr: InStream;
+        FileName: Text;
+
+        XLIFFXMLDoc: XmlDocument;
+        Root: XmlElement;
+        nsmgr: XmlNamespaceManager;
+        nsuri: Text;
+
+        xliffNodeList: XmlNodeList;
+        xliffNode: XmlNode;
+        xliffElement: XmlElement;
+        xliffAttributeCollection: XmlAttributeCollection;
+        xliffAttribute: XmlAttribute;
+
+        fileNodeList: XmlNodeList;
+        fileNode: XmlNode;
+        fileElement: XmlElement;
+        fileAttributeCollection: XmlAttributeCollection;
+        fileAttribute: XmlAttribute;
+
+        transUnitNodeList: XmlNodeList;
+        transUnitNode: XmlNode;
+        transUnitElement: XmlElement;
+        transUnitAttributeCollection: XmlAttributeCollection;
+        transUnitAttribute: XmlAttribute;
+
+        sourceNode: XmlNode;
+        targetNode: XmlNode;
+
+        noteNodeList: XmlNodeList;
+        noteNode: XmlNode;
+        noteElement: XmlElement;
+        noteAttributeCollection: XmlAttributeCollection;
+        noteAttribute: XmlAttribute;
+        noteAttributeNode: XmlNode;
+
+        TransUnitId: Text[250];
+        TargetTranslation: Text;
+    begin
+        //Get the media content from the XLIFF Translation Header into Stream
+        if TenantMedia.Get(XLIFFTranslationHeader.Content.MediaId()) then begin
+            TenantMedia.CalcFields(Content);
+            if TenantMedia.Content.HasValue() then begin
+
+                TenantMedia.Content.CreateInStream(InStr, TextEncoding::UTF8);
+
+                if not XmlDocument.ReadFrom(InStr, XLIFFXMLDoc) then
+                    Error('Failed to read XLIFF file.');
+
+                //Get the root element of the XLIFF XML Document and set the namespace manager 
+                XLIFFXMLDoc.GetRoot(Root);
+                nsuri := Root.NamespaceURI();
+                nsmgr.NameTable(XLIFFXMLDoc.NameTable());
+                nsmgr.AddNamespace('ns', nsuri);
+
+                //Get the file Node to get the Source and Target Language Codes
+                XLIFFXMLDoc.SelectNodes('//ns:file', nsmgr, fileNodeList);
+                foreach fileNode in fileNodeList do begin
+                    fileElement := fileNode.AsXmlElement();
+                    fileAttributeCollection := fileElement.Attributes();
+                    foreach fileAttribute in fileAttributeCollection do
+                        case FileAttribute.Name of
+                            'target-language':
+                                XLIFFTranslationHeader."Target Language Code" := EvaluateXLIFFLanguageCode(FileAttribute.Value);
+                            'source-language':
+                                XLIFFTranslationHeader."Source Language Code" := EvaluateXLIFFLanguageCode(FileAttribute.Value);
+                        end;
+                    XLIFFTranslationHeader.Modify();
+                end;
+
+                //Loop through Trans-Unit Nodes to get the Id and other attributes
+                XLIFFXMlDoc.SelectNodes('//ns:file/ns:body/ns:group/ns:trans-unit', nsmgr, transUnitNodeList);
+                foreach Transunitnode in transUnitNodeList do begin
+
+                    TransUnitId := '';
+
+                    TransUnitElement := TransUnitNode.AsXmlElement();
+                    TransUnitAttributeCollection := TransUnitElement.Attributes();
+                    foreach TransUnitAttribute in TransUnitAttributeCollection do
+                        case TransUnitAttribute.Name of
+                            'id':
+                                TransUnitId := TransUnitAttribute.Value;
+                        end;
+
+                    if not XLIFFTranslationLine.Get(XLIFFTranslationHeader."Entry No.", TransUnitId) then begin
+                        XLIFFTranslationLine.Init();
+                        XLIFFTranslationLine."Document Entry No." := XLIFFTranslationHeader."Entry No.";
+                        XLIFFTranslationLine."Trans-unit Id" := TransUnitId;
+                        XLIFFTranslationLine."Recent Update" := true;
+                        XLIFFTranslationLine.Insert(true);
+                    end;
+
+                    transUnitNode.SelectSingleNode('ns:source', nsmgr, sourceNode);
+                    XLIFFTranslationLine."Source Translation" := sourceNode.AsXmlElement().InnerText();
+
+                    transUnitNode.SelectSingleNode('ns:target', nsmgr, targetNode);
+                    TargetTranslation := targetNode.AsXmlElement().InnerText();
+
+                    transUnitNode.SelectNodes('ns:note', nsmgr, noteNodeList);
+                    foreach noteNode in NoteNodeList do begin
+                        noteElement := noteNode.AsXmlElement();
+                        noteAttributeCollection := noteElement.Attributes();
+                        foreach noteAttribute in noteAttributeCollection do
+                            case noteAttribute.Name of
+                                'from':
+                                    if noteAttribute.Value() = 'Xliff Generator' then begin
+                                        XLIFFTranslationLine."Object Source" := noteElement.InnerText();
+                                    end;
+                            end;
+                    end;
+
+                    if XLIFFTranslationLine."Target Translation" <> TargetTranslation then begin
+                        XLIFFTranslationLine."Target Translation" := TargetTranslation;
+                        XLIFFTranslationLine."Recent Update" := true;
+                    end;
+
+                    XLIFFTranslationLine.Modify();
+                end;
+            end;
+        end;
+    end;
+
     procedure SaveXLIFFChanges(XLIFFTranslationHeader: Record "XLIFF Translation Header")
     var
         XLIFFTranslationLine: Record "XLIFF Translation Line";
