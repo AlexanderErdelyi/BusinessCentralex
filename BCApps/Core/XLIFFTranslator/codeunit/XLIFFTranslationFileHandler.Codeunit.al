@@ -36,7 +36,7 @@ codeunit 50001 "XLIFF Translation File Handler"
             XLIFFTranslation."File Name" := FromFileName;
             XLIFFTranslation.Modify();
 
-            XLIFFTransformationHandler.TransformXLIFF(XLIFFTranslation);
+            XLIFFTransformationHandler.TransformReplaceXLIFF(XLIFFTranslation);
         end;
     end;
 
