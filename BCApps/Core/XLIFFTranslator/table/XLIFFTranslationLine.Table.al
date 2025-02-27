@@ -37,6 +37,10 @@ table 50002 "XLIFF Translation Line"
         {
             Caption = 'Marked to filter';
         }
+        field(320; "Recent Update"; Boolean)
+        {
+            Caption = 'Recent Update';
+        }
     }
     keys
     {
