@@ -25,10 +25,12 @@ table 50008 "DeepL Glossary Header"
         field(21; "Source Language Code"; Code[10])
         {
             Caption = 'Source Language Code';
+            TableRelation = "DeepL Supported Language";
         }
         field(22; "Target Language Code"; Code[10])
         {
             Caption = 'Target Language Code';
+            TableRelation = "DeepL Supported Language";
         }
         field(30; "Creation Time"; DateTime)
         {
